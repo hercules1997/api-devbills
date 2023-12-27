@@ -1,0 +1,32 @@
+import { Category } from '../../entities/category.entity'
+import { CategoryModel } from '../schemas/category.schema'
+
+export class CategoryRepository {
+  constructor(private model: typeof CategoryModel) {}
+
+  async create({ title, color }: Category): Promise<Category> {
+    const createdCategory = await this.model.create({ title, color })
+
+    return createdCategory.toObject<Category>()
+  }
+
+  async findByTitle(title: string): Promise<Category | undefined> {
+    const categoryByTitle = await this.model.findOne({ title })
+
+    return categoryByTitle?.toObject<Category>()
+  }
+
+  async findById(id: string): Promise<Category | undefined> {
+    const categoryById = await this.model.findById(id)
+
+    return categoryById?.toObject<Category>()
+  }
+
+  async index(): Promise<Category[]> {
+    const categories = await this.model.find()
+
+    const categoriesMap = categories.map((item) => item.toObject<Category>())
+
+    return categoriesMap
+  }
+}
