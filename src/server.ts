@@ -8,7 +8,11 @@ import cors from 'cors'
 setupMongo().then(() => {
   const app = express()
 
-  app.use(cors())
+  app.use(
+    cors({
+      origin: process.env.FRONT_URL as string
+    })
+  )
   app.use(json())
   app.use(routes)
   app.use(errorHandle)
