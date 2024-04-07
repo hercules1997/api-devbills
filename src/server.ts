@@ -18,5 +18,7 @@ setupMongo().then(() => {
   app.use(errorHandle)
   const port = 3333
 
-  app.listen(port, () => console.log(`🚀 App is running at port ${port}`))
+  app.listen(port, () =>
+    console.log(`🚀 - App is running at port ${port} - 🚀`)
+  )
 })
