@@ -6,13 +6,13 @@ services:
     restart: always
     image: mongo
     environment:
-      MONGO_INITDB_ROOT_USERNAME: 'mongo'
-      MONGO_INITDB_ROOT_PASSWORD: 'UFqsXAYnbdERUdRdcrogTCXJouNGNmaN'
+      MONGO_INITDB_ROOT_USERNAME: 'devbills'
+      MONGO_INITDB_ROOT_PASSWORD: 'devbills4522'
 
     ports:
       - '27017:27017'
     networks:
-      - mongodb://${{MONGO_INITDB_ROOT_USERNAME}}:${{MONGO_INITDB_ROOT_PASSWORD}}@${{RAILWAY_PRIVATE_DOMAIN}}:27017
+      - local
 
   app:
     depends_on:
