@@ -1,11 +1,11 @@
-# FROM node:18-alpine
+FROM node:18-alpine
 
-# WORKDIR /home/app
+WORKDIR /home/app
 
-# COPY . ./
+COPY . ./
 
-# RUN npm i 
+RUN npm i 
 
-# EXPOSE 3333
+EXPOSE 3333
 
-# CMD [ "npm", "run", "dev"]
+CMD [ "npm", "run", "dev"]
