@@ -34,3 +34,10 @@ export const getFinancialEvolutionSchema = {
 }
 const getFinacialEvolutionObject = z.object(getFinancialEvolutionSchema)
 export type GetFinancialEvolutionDTO = z.infer<typeof getFinacialEvolutionObject>
+
+export const deleteTransactionSchema = {
+  id: z.string().length(24) // Verifica se o ID tem 24 caracteres
+};
+
+const deleteTransactionObject = z.object(deleteTransactionSchema);
+export type DeleteTransactionDTO = z.infer<typeof deleteTransactionObject>

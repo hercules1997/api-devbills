@@ -85,4 +85,15 @@ export class TransactionsService {
 
     return resultFinancialEvolution
   }
+
+  // Método de deleção de transação
+  async delete(id: string): Promise<void> {
+    const transaction = await this.transactionRepository.findById(id)
+
+    if (!transaction) {
+      throw new AppError('Transaction not found', StatusCodes.NOT_FOUND)
+    }
+
+    await this.transactionRepository.deleteById(id)
+  }
 }

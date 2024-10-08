@@ -28,7 +28,6 @@ export class TransactionRepository {
       type,
       category
     })
-
     return createdTransaction.toObject<Transaction>()
   }
 
@@ -51,16 +50,23 @@ export class TransactionRepository {
     }
 
     const transactions = await this.model.find(whereParams, undefined, {
-      sort: {
-        date: -1
-      }
+      sort: { date: -1 }
     })
 
     const transactionsMap = transactions.map((item) =>
       item.toObject<Transaction>()
     )
-
     return transactionsMap
+  }
+
+  // Novo método para buscar transação por ID
+  async findById(id: string): Promise<Transaction | null> {
+    return this.model.findById(id).lean() // lean() retorna um objeto mais simples
+  }
+
+  // Novo método para deletar transação por ID
+  async deleteById(id: string): Promise<void> {
+    await this.model.findByIdAndDelete(id)
   }
 
   async getBalance({ beginDate, endDate }: GetDashboardDTO): Promise<Balance> {
@@ -79,37 +85,19 @@ export class TransactionRepository {
       .project({
         _id: 0,
         income: {
-          $cond: [
-            {
-              $eq: ['$type', 'income']
-            },
-            '$amount',
-            0
-          ]
+          $cond: [{ $eq: ['$type', 'income'] }, '$amount', 0]
         },
         expense: {
-          $cond: [
-            {
-              $eq: ['$type', 'expense']
-            },
-            '$amount',
-            0
-          ]
+          $cond: [{ $eq: ['$type', 'expense'] }, '$amount', 0]
         }
       })
       .group({
         _id: null,
-        incomes: {
-          $sum: '$income'
-        },
-        expenses: {
-          $sum: '$expense'
-        }
+        incomes: { $sum: '$income' },
+        expenses: { $sum: '$expense' }
       })
       .addFields({
-        balance: {
-          $subtract: ['$incomes', '$expenses']
-        }
+        balance: { $subtract: ['$incomes', '$expenses'] }
       })
 
     return result
@@ -134,15 +122,9 @@ export class TransactionRepository {
 
     const result = await aggregate.match(matchParams).group({
       _id: '$category._id',
-      title: {
-        $first: '$category.title'
-      },
-      color: {
-        $first: '$category.color'
-      },
-      amout: {
-        $sum: '$amount'
-      }
+      title: { $first: '$category.title' },
+      color: { $first: '$category.color' },
+      amount: { $sum: '$amount' }
     })
 
     return result
@@ -163,48 +145,24 @@ export class TransactionRepository {
       .project({
         _id: 0,
         income: {
-          $cond: [
-            {
-              $eq: ['$type', 'income']
-            },
-            '$amount',
-            0
-          ]
+          $cond: [{ $eq: ['$type', 'income'] }, '$amount', 0]
         },
         expense: {
-          $cond: [
-            {
-              $eq: ['$type', 'expense']
-            },
-            '$amount',
-            0
-          ]
+          $cond: [{ $eq: ['$type', 'expense'] }, '$amount', 0]
         },
-        year: {
-          $year: '$date'
-        },
-        month: {
-          $month: '$date'
-        }
+        year: { $year: '$date' },
+        month: { $month: '$date' }
       })
       .group({
         _id: ['$year', '$month'],
-        incomes: {
-          $sum: '$income'
-        },
-        expenses: {
-          $sum: '$expense'
-        }
+        incomes: { $sum: '$income' },
+        expenses: { $sum: '$expense' }
       })
       .addFields({
-        balance: {
-          $subtract: ['$incomes', '$expenses']
-        }
+        balance: { $subtract: ['$incomes', '$expenses'] }
       })
-      .sort({
-        _id: 1
-      })
- 
+      .sort({ _id: 1 })
+
     return result
   }
 }

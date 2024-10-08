@@ -87,5 +87,21 @@ export class TransactionsController {
     } catch (err) {
       next(err)
     }
+    
+  }
+    delete = async (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ) => {
+      try {
+        const { id } = req.params;
+        
+        await this.transactionsService.delete(id);
+        
+        return res.status(StatusCodes.NO_CONTENT).send();
+      } catch (err) {
+      next(err);
+    }
   }
 }
